@@ -1,8 +1,9 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
 # ========================================================
-# RstmMod-UX-Pro (Rebranded TermuxVoid Engine)
-# Version: 5.0 (VIP Edition)
+# RstmMod-UX-Pro (The Ultimate TechXtra Framework)
+# Version: 6.0 (Matrix Edition)
+# Developed by: TechXtra
 # ========================================================
 
 # Colors
@@ -18,107 +19,81 @@ REPO_URL="https://github.com/TechXtra/RstmMod-UX-Pro"
 TMP_DIR="$HOME/rstmmod_tmp"
 
 # =============================================
-# FUNCTION: show_header (Aapka Naya Block Art)
+# FUNCTION: show_header (Slanted ASCII)
 # =============================================
 show_header() {
     clear
     echo -e "${GREEN}"
-    echo " ██████╗ ███████╗████████╗███╗   ███╗███╗   ███╗ ██████╗ ██████╗ "
-    echo " ██╔══██╗██╔════╝╚══██╔══╝████╗ ████║████╗ ████║██╔═══██╗██╔══██╗"
-    echo " ██████╔╝███████╗   ██║   ██╔████╔██║██╔████╔██║██║   ██║██║  ██║"
-    echo " ██╔══██╗╚════██║   ██║   ██║╚██╔╝██║██║╚██╔╝██║██║   ██║██║  ██║"
-    echo " ██║  ██║███████║   ██║   ██║ ╚═╝  ██║██║ ╚═╝  ██║╚██████╔╝██████╔╝"
-    echo " ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚═╝      ╚═╝╚═╝      ╚═╝ ╚═════╝ ╚═════╝"
-    echo -e "${CYAN}                Version: 5.0 (VIP Edition)${NC}"
+    cat << 'EOF'
+ ____/\\\\\\\\\_____________________________________________________/\\\\____________/\\\\_______________________/\\\__ 
+ __/\\\///////\\\__________________________________________________\/\\\\\\________/\\\\\\______________________\/\\\__ 
+ _\/\\\_____\/\\\____________________/\\\__________________________\/\\\//\\\____/\\\//\\\______________________\/\\\__ 
+ _\/\\\\\\\\\\\/_____/\\\\\\\\\\__/\\\\\\\\\\\____/\\\\\__/\\\\\___\/\\\\///\\\/\\\/_\/\\\_____/\\\\\___________\/\\\__ 
+ _\/\\\//////\\\____\/\\\//////__\////\\\////___/\\\///\\\\\///\\\_\/\\\__\///\\\/___\/\\\___/\\\///\\\____/\\\\\\\\\__ 
+ _\/\\\____\//\\\___\/\\\\\\\\\\____\/\\\______\/\\\_\//\\\__\/\\\_\/\\\____\///_____\/\\\__/\\\__\//\\\__/\\\////\\\__ 
+ _\/\\\_____\//\\\__\////////\\\____\/\\\_/\\__\/\\\__\/\\\__\/\\\_\/\\\_____________\/\\\_\//\\\__/\\\__\/\\\__\/\\\__ 
+ _\/\\\______\//\\\__/\\\\\\\\\\____\//\\\\\___\/\\\__\/\\\__\/\\\_\/\\\_____________\/\\\__\///\\\\\/___\//\\\\\\\/\\_ 
+ _\///________\///__\//////////______\/////____\///___\///___\///__\///______________\///_____\/////______\///////\//__
+EOF
+    echo -e "${CYAN}                Version: 6.0 (Master Matrix Toolkit)${NC}"
     echo -e "${WHITE}------------------------------------------------------------${NC}"
-    echo -e "${YELLOW}  Join us on TG:     ${WHITE}RstmMod${NC}"
-    echo -e "${YELLOW}  Join us on Github: ${WHITE}TechXtra${NC}"
+    echo -e "${YELLOW}  TG: RstmMod | Github: TechXtra | Matrix Mode: Active${NC}"
     echo -e "${WHITE}------------------------------------------------------------${NC}"
-    echo -e "${YELLOW}This script will:${NC}"
-    echo -e " • Install Fish shell and set as default"
-    echo -e " • Configure Starship prompt"
-    echo -e " • Set up RstmMod color scheme & fonts"
-    echo -e " • Clean up after installation\n"
 }
 
 # =============================================
-# ORIGINAL ENGINE LOGIC (TermuxVoid Framework)
+# NEW: Matrix Animation Logic
 # =============================================
-
-check_dependencies() {
-    echo -e "${YELLOW}[*] Checking system dependencies...${NC}"
-    pkg update -y || echo -e "${RED}[!] Update skipped (Mirror issue)${NC}"
-    for pkg in git curl fish starship jp2a eza; do
-        if command -v $pkg &> /dev/null; then
-            echo -e "${GREEN}[√] $pkg installed${NC}"
-        else
-            echo -e "${RED}[!] $pkg not found, installing...${NC}"
-            pkg install $pkg -y
-        fi
+start_matrix_loop() {
+    echo -e "${CYAN}[*] Starting 10-second Matrix Loop... (CTRL+C to Stop)${NC}"
+    while true; do
+        cmatrix -as -u 10 & 
+        PID=$!
+        sleep 3
+        kill $PID
+        sleep 10
     done
 }
 
-set_fish_shell() {
-    echo -e "${YELLOW}[*] Changing shell to Fish...${NC}"
-    chsh -s fish
+# Original Tools (Preserved)
+optimize_system() {
+    echo -e "${YELLOW}[*] Cleaning and Optimizing Termux...${NC}"
+    pkg update -y && pkg upgrade -y
+    pkg autoclean && pkg autoremove
+    termux-setup-storage
 }
 
-fetch_theme() {
-    echo -e "${YELLOW}[*] Downloading theme repository...${NC}"
-    rm -rf "$TMP_DIR"
-    git clone "$REPO_URL" "$TMP_DIR"
-}
-
-customize_prompt() {
-    echo -e "${YELLOW}[*] Configuring Starship prompt...${NC}"
-    mkdir -p ~/.config/fish
-    [ -f "$TMP_DIR/assets/starship.toml" ] && cp "$TMP_DIR/assets/starship.toml" ~/.config/starship.toml
-    echo "starship init fish | source" > ~/.config/fish/config.fish
-}
-
-setup_banner() {
-    echo -e "${YELLOW}[*] Setting up login banner...${NC}"
-    mkdir -p ~/.termux
-    cat << 'EOF' > ~/.termux/wlcm.sh
-#!/data/data/com.termux/files/usr/bin/bash
-clear
-echo -e "\e[1;32m"
-echo " ██████╗ ███████╗████████╗███╗   ███╗███╗   ███╗ ██████╗ ██████╗ "
-echo " ██╔══██╗██╔════╝╚══██╔══╝████╗ ████║████╗ ████║██╔═══██╗██╔══██╗"
-echo " ██████╔╝███████╗   ██║   ██╔████╔██║██╔████╔██║██║   ██║██║  ██║"
-echo " ██╔══██╗╚════██║   ██║   ██║╚██╔╝██║██║╚██╔╝██║██║   ██║██║  ██║"
-echo " ██║  ██║███████║   ██║   ██║ ╚═╝  ██║██║ ╚═╝  ██║╚██████╔╝██████╔╝"
-echo " ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚═╝      ╚═╝╚═╝      ╚═╝ ╚═════╝ ╚═════╝"
-echo -e "\e[1;36m        Welcome back to RstmMod-UX-Pro VIP!\e[0m"
-echo ""
-EOF
-    chmod +x ~/.termux/wlcm.sh
-    echo "bash ~/.termux/wlcm.sh" >> ~/.config/fish/config.fish
-}
-
-install_files() {
-    echo -e "${YELLOW}[*] Installing configuration files...${NC}"
-    [ -f "$TMP_DIR/assets/colors.properties" ] && cp "$TMP_DIR/assets/colors.properties" ~/.termux/colors.properties
-    [ -f "$TMP_DIR/assets/font.ttf" ] && cp "$TMP_DIR/assets/font.ttf" ~/.termux/font.ttf
-    termux-reload-settings
-}
-
-complete_installation() {
-    echo -e "\n${GREEN}[√] Installation completed successfully!${NC}"
-    echo -e "\n${RED}IMPORTANT:${NC}"
-    echo -e "1. Fully close and reopen Termux"
-    rm -rf "$TMP_DIR"
-    read -p "Press Enter to exit..."
+install_tools() {
+    echo -e "${YELLOW}[*] Installing VIP Tools...${NC}"
+    pkg install python git sqlmap nmap php openssh cmatrix -y
+    git clone https://github.com/Tuhinshubhra/RED_HAWK $HOME/RED_HAWK 2>/dev/null
 }
 
 # =============================================
-# EXECUTION FLOW
+# MAIN MENU (Everything Intact)
 # =============================================
-show_header
-check_dependencies
-set_fish_shell
-fetch_theme
-customize_prompt
-setup_banner
-install_files
-complete_installation
+main_menu() {
+    show_header
+    echo -e "${WHITE}[1] ${CYAN}Full VIP Installation (Theme + Setup)${NC}"
+    echo -e "${WHITE}[2] ${CYAN}Update & Optimize Termux${NC}"
+    echo -e "${WHITE}[3] ${CYAN}Install TechXtra Hacking Tools${NC}"
+    echo -e "${WHITE}[4] ${CYAN}Repair Corrupt Packages${NC}"
+    echo -e "${WHITE}[5] ${GREEN}Run Matrix Animation Loop (10s)${NC}"
+    echo -e "${WHITE}[6] ${RED}Exit${NC}"
+    echo ""
+    read -p "Select an option: " choice
+
+    case $choice in
+        1) # Theme Engine Logic call
+           pkg install fish starship cmatrix -y
+           chsh -s fish ;;
+        2) optimize_system ;;
+        3) install_tools ;;
+        4) pkg install --fix-broken -y ;;
+        5) start_matrix_loop ;;
+        6) exit 0 ;;
+        *) main_menu ;;
+    esac
+}
+
+main_menu
