@@ -1,7 +1,11 @@
-#!/bin/bash
-cols=$(tput cols)
-text="Welcome to RstmMod-UX-Pro!"
-padding=$(( ($cols - ${#text}) / 2 ))
-tput clear
-tput cup 0 0
-printf "%${padding}s%s\n" "" "$text"
+#!/data/data/com.termux/files/usr/bin/bash
+clear
+echo -e "\e[1;32m"
+echo " ██████╗ ███████╗████████╗███╗   ███╗███╗   ███╗ ██████╗ ██████╗ "
+echo " ██╔══██╗██╔════╝╚══██╔══╝████╗ ████║████╗ ████║██╔═══██╗██╔══██╗"
+echo " ██████╔╝███████╗   ██║   ██╔████╔██║██╔████╔██║██║   ██║██║  ██║"
+echo " ██╔══██╗╚════██║   ██║   ██║╚██╔╝██║██║╚██╔╝██║██║   ██║██║  ██║"
+echo " ██║  ██║███████║   ██║   ██║ ╚═╝  ██║██║ ╚═╝  ██║╚██████╔╝██████╔╝"
+echo " ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚═╝      ╚═╝╚═╝      ╚═╝ ╚═════╝ ╚═════╝"
+echo -e "\e[1;36m             Welcome back to RstmMod-UX-Pro VIP!\e[0m"
+echo ""
