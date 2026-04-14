@@ -1,9 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
 # ========================================================
-# RstmMod-UX-Pro (The Ultimate TechXtra Framework)
-# Version: 6.0 (Matrix Edition)
-# Developed by: TechXtra
+# RstmMod-UX-Pro (Official TechXtra Framework)
+# Version: 6.0 | Created by: TechXtra
 # ========================================================
 
 # Colors
@@ -19,7 +18,7 @@ REPO_URL="https://github.com/TechXtra/RstmMod-UX-Pro"
 TMP_DIR="$HOME/rstmmod_tmp"
 
 # =============================================
-# FUNCTION: show_header (Slanted ASCII)
+# FUNCTION: show_header (Slanted ASCII Only)
 # =============================================
 show_header() {
     clear
@@ -35,65 +34,101 @@ show_header() {
  _\/\\\______\//\\\__/\\\\\\\\\\____\//\\\\\___\/\\\__\/\\\__\/\\\_\/\\\_____________\/\\\__\///\\\\\/___\//\\\\\\\/\\_ 
  _\///________\///__\//////////______\/////____\///___\///___\///__\///______________\///_____\/////______\///////\//__
 EOF
-    echo -e "${CYAN}                Version: 6.0 (Master Matrix Toolkit)${NC}"
+    echo -e "${CYAN}                Version: 6.0 (Clean VIP Edition)${NC}"
     echo -e "${WHITE}------------------------------------------------------------${NC}"
-    echo -e "${YELLOW}  TG: RstmMod | Github: TechXtra | Matrix Mode: Active${NC}"
+    echo -e "${YELLOW}  TG: RstmMod | Github: TechXtra | Pro Toolkit: Enabled${NC}"
     echo -e "${WHITE}------------------------------------------------------------${NC}"
 }
 
 # =============================================
-# NEW: Matrix Animation Logic
+# TOOLKIT FUNCTIONS
 # =============================================
-start_matrix_loop() {
-    echo -e "${CYAN}[*] Starting 10-second Matrix Loop... (CTRL+C to Stop)${NC}"
-    while true; do
-        cmatrix -as -u 10 & 
-        PID=$!
-        sleep 3
-        kill $PID
-        sleep 10
-    done
-}
-
-# Original Tools (Preserved)
 optimize_system() {
-    echo -e "${YELLOW}[*] Cleaning and Optimizing Termux...${NC}"
-    pkg update -y && pkg upgrade -y
+    echo -e "${YELLOW}[*] Optimizing system and clearing cache...${NC}"
+    pkg update -y || echo "Mirror slow, proceeding..."
     pkg autoclean && pkg autoremove
     termux-setup-storage
+    echo -e "${GREEN}[√] Optimization Complete!${NC}"
 }
 
 install_tools() {
-    echo -e "${YELLOW}[*] Installing VIP Tools...${NC}"
-    pkg install python git sqlmap nmap php openssh cmatrix -y
+    echo -e "${YELLOW}[*] Installing TechXtra Hacking Suite...${NC}"
+    pkg install python git sqlmap nmap php openssh -y
     git clone https://github.com/Tuhinshubhra/RED_HAWK $HOME/RED_HAWK 2>/dev/null
+    echo -e "${GREEN}[√] Tools Installed Successfully!${NC}"
 }
 
 # =============================================
-# MAIN MENU (Everything Intact)
+# THEME INSTALLATION ENGINE
+# =============================================
+install_theme() {
+    echo -e "${YELLOW}[*] Starting RstmMod-UX-Pro Theme Engine...${NC}"
+    
+    # 1. Dependencies
+    for pkg in git curl fish starship jp2a eza; do
+        command -v $pkg &> /dev/null || pkg install $pkg -y
+    done
+
+    # 2. Shell & Repo
+    chsh -s fish
+    rm -rf "$TMP_DIR"
+    git clone "$REPO_URL" "$TMP_DIR"
+
+    # 3. Prompt Setup
+    mkdir -p ~/.config/fish
+    [ -f "$TMP_DIR/assets/starship.toml" ] && cp "$TMP_DIR/assets/starship.toml" ~/.config/starship.toml
+    echo "starship init fish | source" > ~/.config/fish/config.fish
+
+    # 4. Custom Login Banner
+    mkdir -p ~/.termux
+    cat << 'EOF' > ~/.termux/wlcm.sh
+#!/data/data/com.termux/files/usr/bin/bash
+clear
+echo -e "\e[1;32m"
+echo " ____/\\\\\\\\\_____________________________________________________/\\\\____________/\\\\_______________________/\\\__ "
+echo " __/\\\///////\\\__________________________________________________\/\\\\\\________/\\\\\\______________________\/\\\__ "
+echo " _\/\\\_____\/\\\____________________/\\\__________________________\/\\\//\\\____/\\\//\\\______________________\/\\\__ "
+echo " _\/\\\\\\\\\\\/_____/\\\\\\\\\\__/\\\\\\\\\\\____/\\\\\__/\\\\\___\/\\\\///\\\/\\\/_\/\\\_____/\\\\\___________\/\\\__ "
+echo " _\/\\\//////\\\____\/\\\//////__\////\\\////___/\\\///\\\\\///\\\_\/\\\__\///\\\/___\/\\\___/\\\///\\\____/\\\\\\\\\__ "
+echo " _\/\\\____\//\\\___\/\\\\\\\\\\____\/\\\______\/\\\_\//\\\__\/\\\_\/\\\____\///_____\/\\\__/\\\__\//\\\__/\\\////\\\__ "
+echo " _\/\\\_____\//\\\__\////////\\\____\/\\\_/\\__\/\\\__\/\\\__\/\\\_\/\\\_____________\/\\\_\//\\\__/\\\__\/\\\__\/\\\__ "
+echo " _\/\\\______\//\\\__/\\\\\\\\\\____\//\\\\\___\/\\\__\/\\\__\/\\\_\/\\\_____________\/\\\__\///\\\\\/___\//\\\\\\\/\\_ "
+echo " _\///________\///__\//////////______\/////____\///___\///___\///__\///______________\///_____\/////______\///////\//__"
+echo -e "\e[1;36m        Welcome back to RstmMod-UX-Pro VIP!\e[0m"
+echo ""
+EOF
+    chmod +x ~/.termux/wlcm.sh
+    echo "bash ~/.termux/wlcm.sh" >> ~/.config/fish/config.fish
+
+    # 5. Appearance
+    [ -f "$TMP_DIR/assets/colors.properties" ] && cp "$TMP_DIR/assets/colors.properties" ~/.termux/colors.properties
+    [ -f "$TMP_DIR/assets/font.ttf" ] && cp "$TMP_DIR/assets/font.ttf" ~/.termux/font.ttf
+    termux-reload-settings
+}
+
+# =============================================
+# MAIN MENU SYSTEM
 # =============================================
 main_menu() {
     show_header
-    echo -e "${WHITE}[1] ${CYAN}Full VIP Installation (Theme + Setup)${NC}"
+    echo -e "${WHITE}[1] ${CYAN}Full VIP Theme Installation${NC}"
     echo -e "${WHITE}[2] ${CYAN}Update & Optimize Termux${NC}"
-    echo -e "${WHITE}[3] ${CYAN}Install TechXtra Hacking Tools${NC}"
-    echo -e "${WHITE}[4] ${CYAN}Repair Corrupt Packages${NC}"
-    echo -e "${WHITE}[5] ${GREEN}Run Matrix Animation Loop (10s)${NC}"
-    echo -e "${WHITE}[6] ${RED}Exit${NC}"
+    echo -e "${WHITE}[3] ${CYAN}Install RstmMod Hacking Tools${NC}"
+    echo -e "${WHITE}[4] ${CYAN}Fix Repository Mirrors${NC}"
+    echo -e "${WHITE}[5] ${RED}Exit${NC}"
     echo ""
-    read -p "Select an option: " choice
+    read -p "Selection: " choice
 
     case $choice in
-        1) # Theme Engine Logic call
-           pkg install fish starship cmatrix -y
-           chsh -s fish ;;
+        1) install_theme ;;
         2) optimize_system ;;
         3) install_tools ;;
-        4) pkg install --fix-broken -y ;;
-        5) start_matrix_loop ;;
-        6) exit 0 ;;
+        4) termux-change-repo ;;
+        5) exit 0 ;;
         *) main_menu ;;
     esac
 }
 
 main_menu
+rm -rf "$TMP_DIR"
+echo -e "\n${GREEN}[√] Successfully Completed! Restart Termux now.${NC}"
