@@ -2,7 +2,7 @@
 
 # ========================================================
 # RstmMod-UX-Pro (Official TechXtra Framework)
-# Version: 6.0 | Branded for: TechXtra
+# Version: 6.7 | Fully Interactive | Visibility Fixed
 # ========================================================
 
 # Colors
@@ -18,7 +18,7 @@ REPO_URL="https://github.com/TechXtra/RstmMod-UX-Pro"
 TMP_DIR="$HOME/rstmmod_tmp"
 
 # =============================================
-# FUNCTION: show_header (Mobile-Friendly ASCII)
+# FUNCTION: show_header
 # =============================================
 show_header() {
     clear
@@ -28,50 +28,72 @@ show_header() {
     echo " | |_) \___ \ | | | |\/| | |\/| | | | | | | |"
     echo " |  _ < ___) || | | |  | | |  | | |_| | |_| |"
     echo " |_| \_\____/ |_| |_|  |_|_|  |_|\___/|____/"
-    echo -e "${CYAN}        Version: 6.0 (VIP Mobile Edition)${NC}"
+    echo -e "${CYAN}        Professional terminal customization for Termux${NC}"
     echo -e "${WHITE}--------------------------------------------------${NC}"
-    echo -e "${YELLOW}  TG: RstmMod | Github: TechXtra | Saudi Mirror: OK${NC}"
-    echo -e "${WHITE}--------------------------------------------------${NC}"
+    echo -e "${YELLOW}This script will:${NC}"
+    echo -e " • Install Fish shell and set as default"
+    echo -e " • Configure Starship prompt with YOUR name"
+    echo -e " • Fix Autosuggestion visibility (Grey 🩶)"
+    echo -e " • Set up RstmMod color scheme & fonts\n"
 }
 
 # =============================================
-# TOOLKIT FUNCTIONS
-# =============================================
-optimize_system() {
-    echo -e "${YELLOW}[*] Optimizing system and clearing cache...${NC}"
-    pkg update -y || echo "Mirror busy, proceeding..."
-    pkg autoclean && pkg autoremove
-    termux-setup-storage
-    echo -e "${GREEN}[√] Optimization Complete!${NC}"
-}
-
-install_tools() {
-    echo -e "${YELLOW}[*] Installing TechXtra Hacking Suite...${NC}"
-    pkg install python git sqlmap nmap php openssh -y
-    git clone https://github.com/Tuhinshubhra/RED_HAWK $HOME/RED_HAWK 2>/dev/null
-    echo -e "${GREEN}[√] Tools Installed Successfully!${NC}"
-}
-
-# =============================================
-# THEME INSTALLATION ENGINE
+# THEME INSTALLATION ENGINE (Interactive)
 # =============================================
 install_theme() {
-    echo -e "${YELLOW}[*] Starting RstmMod-UX-Pro Theme Engine...${NC}"
-    
+    echo -e "${YELLOW}[*] Checking system dependencies...${NC}"
     for pkg in git curl fish starship jp2a eza; do
-        command -v $pkg &> /dev/null || pkg install $pkg -y
+        if command -v $pkg &> /dev/null; then
+            echo -e "${GREEN}[√] $pkg is already installed${NC}"
+        else
+            echo -e "${RED}[!] $pkg not found, installing...${NC}"
+            pkg install $pkg -y
+        fi
     done
 
-    chsh -s fish
+    echo -e "\n${YELLOW}[*] Downloading theme repository...${NC}"
     rm -rf "$TMP_DIR"
     git clone "$REPO_URL" "$TMP_DIR"
+    echo -e "${GREEN}[√] Repository synced successfully${NC}"
 
+    # --- INTERACTIVE USER NAME PROMPT ---
+    echo -e "\n${WHITE}--------------------------------------------------${NC}"
+    echo -ne "${CYAN}Enter the name you want in prompt: ${NC}"
+    read user_name
+    if [ -z "$user_name" ]; then user_name="RstmMod"; fi
+    echo -e "${GREEN}[+] Name set to: $user_name${NC}"
+
+    # --- BANNER PROMPT ---
+    echo -ne "${CYAN}Install custom login banner? [y/N]: ${NC}"
+    read conf_banner
+    echo -e "${WHITE}--------------------------------------------------${NC}"
+
+    # Setup Fish Configuration
+    echo -e "${YELLOW}[*] Configuring Fish shell and Starship...${NC}"
+    chsh -s fish
     mkdir -p ~/.config/fish
-    [ -f "$TMP_DIR/assets/starship.toml" ] && cp "$TMP_DIR/assets/starship.toml" ~/.config/starship.toml
-    echo "starship init fish | source" > ~/.config/fish/config.fish
+    
+    # Writing visibility fixes and custom name to config.fish
+    cat << EOF > ~/.config/fish/config.fish
+# RstmMod Custom Config
+set -g fish_greeting ""
+set -gx USER_NAME '$user_name'
 
-    mkdir -p ~/.termux
-    cat << 'EOF' > ~/.termux/wlcm.sh
+# FIX: Bright Grey Autosuggestions for visibility
+set -g fish_color_autosuggestion 555
+
+starship init fish | source
+EOF
+
+    # Starship Prompt Setup
+    if [ -f "$TMP_DIR/assets/starship.toml" ]; then
+        cp "$TMP_DIR/assets/starship.toml" ~/.config/starship.toml
+    fi
+
+    # Banner Setup
+    if [[ "$conf_banner" =~ ^([yY][eE][sS]|[yY])$ ]]; then
+        mkdir -p ~/.termux
+        cat << 'EOF' > ~/.termux/wlcm.sh
 #!/data/data/com.termux/files/usr/bin/bash
 clear
 echo -e "\e[1;32m"
@@ -83,37 +105,28 @@ echo " |_| \_\____/ |_| |_|  |_|_|  |_|\___/|____/"
 echo -e "\e[1;36m       Welcome back to RstmMod-UX-Pro VIP!\e[0m"
 echo ""
 EOF
-    chmod +x ~/.termux/wlcm.sh
-    echo "bash ~/.termux/wlcm.sh" >> ~/.config/fish/config.fish
+        chmod +x ~/.termux/wlcm.sh
+        echo "bash ~/.termux/wlcm.sh" >> ~/.config/fish/config.fish
+        echo -e "${GREEN}[√] Custom banner enabled${NC}"
+    fi
 
+    # Colors and Fonts
+    echo -e "${YELLOW}[*] Applying RstmMod UI assets...${NC}"
     [ -f "$TMP_DIR/assets/colors.properties" ] && cp "$TMP_DIR/assets/colors.properties" ~/.termux/colors.properties
     [ -f "$TMP_DIR/assets/font.ttf" ] && cp "$TMP_DIR/assets/font.ttf" ~/.termux/font.ttf
     termux-reload-settings
+    
+    echo -e "\n${GREEN}============================================${NC}"
+    echo -e "${GREEN}[√] ALL TASKS COMPLETED SUCCESSFULLY!${NC}"
+    echo -e "${GREEN}============================================${NC}"
+    echo -e "\n${RED}NOTICE:${NC} Please restart Termux to see changes."
 }
 
 # =============================================
-# MAIN MENU
+# MAIN EXECUTION
 # =============================================
-main_menu() {
-    show_header
-    echo -e "${WHITE}[1] ${CYAN}Full VIP Theme Installation${NC}"
-    echo -e "${WHITE}[2] ${CYAN}Update & Optimize Termux${NC}"
-    echo -e "${WHITE}[3] ${CYAN}Install RstmMod Hacking Tools${NC}"
-    echo -e "${WHITE}[4] ${CYAN}Fix Repository Mirrors${NC}"
-    echo -e "${WHITE}[5] ${RED}Exit${NC}"
-    echo ""
-    read -p "Selection: " choice
-
-    case $choice in
-        1) install_theme ;;
-        2) optimize_system ;;
-        3) install_tools ;;
-        4) termux-change-repo ;;
-        5) exit 0 ;;
-        *) main_menu ;;
-    esac
-}
-
-main_menu
+show_header
+install_theme
 rm -rf "$TMP_DIR"
-echo -e "\n${GREEN}[√] Done! Restart Termux to see the new look.${NC}"
+echo -ne "\n${CYAN}Press Enter to finish...${NC}"
+read
