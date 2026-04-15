@@ -1,10 +1,5 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
-# ========================================================
-# RstmMod-UX-Pro (Official TechXtra Framework)
-# Version: 6.7 | Fully Interactive | Visibility Fixed
-# ========================================================
-
 # Colors
 GREEN="\e[1;32m"
 CYAN="\e[1;36m"
@@ -13,87 +8,67 @@ YELLOW="\e[1;33m"
 RED="\e[1;31m"
 NC="\e[0m"
 
-# Variables
 REPO_URL="https://github.com/TechXtra/RstmMod-UX-Pro"
 TMP_DIR="$HOME/rstmmod_tmp"
 
-# =============================================
-# FUNCTION: show_header
-# =============================================
-show_header() {
-    clear
-    echo -e "${GREEN}"
-    echo "  ____  ____ _____ __  __ __  __  ___  ____"
-    echo " |  _ \/ ___|_   _|  \/  |  \/  |/ _ \|  _ \ "
-    echo " | |_) \___ \ | | | |\/| | |\/| | | | | | | |"
-    echo " |  _ < ___) || | | |  | | |  | | |_| | |_| |"
-    echo " |_| \_\____/ |_| |_|  |_|_|  |_|\___/|____/"
-    echo -e "${CYAN}        Professional terminal customization for Termux${NC}"
-    echo -e "${WHITE}--------------------------------------------------${NC}"
-    echo -e "${YELLOW}This script will:${NC}"
-    echo -e " • Install Fish shell and set as default"
-    echo -e " • Configure Starship prompt with YOUR name"
-    echo -e " • Fix Autosuggestion visibility (Grey 🩶)"
-    echo -e " • Set up RstmMod color scheme & fonts\n"
-}
+clear
+echo -e "${GREEN}"
+echo "  ____  ____ _____ __  __ __  __  ___  ____"
+echo " |  _ \/ ___|_   _|  \/  |  \/  |/ _ \|  _ \ "
+echo " | |_) \___ \ | | | |\/| | |\/| | | | | | | |"
+echo " |  _ < ___) || | | |  | | |  | | |_| | |_| |"
+echo " |_| \_\____/ |_| |_|  |_|_|  |_|\___/|____/"
+echo -e "Professional terminal customization for Termux${NC}\n"
 
-# =============================================
-# THEME INSTALLATION ENGINE (Interactive)
-# =============================================
-install_theme() {
-    echo -e "${YELLOW}[*] Checking system dependencies...${NC}"
-    for pkg in git curl fish starship jp2a eza; do
-        if command -v $pkg &> /dev/null; then
-            echo -e "${GREEN}[√] $pkg is already installed${NC}"
-        else
-            echo -e "${RED}[!] $pkg not found, installing...${NC}"
-            pkg install $pkg -y
-        fi
-    done
+echo -e "${YELLOW}This script will:${NC}"
+echo -e " • Install Fish shell and set as default"
+echo -e " • Configure Starship prompt"
+echo -e " • Set up Termux color scheme"
+echo -e " • Optionally configure custom banner"
+echo -e " • Modify MOTD display"
+echo -e " • Clean up after installation\n"
 
-    echo -e "\n${YELLOW}[*] Downloading theme repository...${NC}"
-    rm -rf "$TMP_DIR"
-    git clone "$REPO_URL" "$TMP_DIR"
-    echo -e "${GREEN}[√] Repository synced successfully${NC}"
-
-    # --- INTERACTIVE USER NAME PROMPT ---
-    echo -e "\n${WHITE}--------------------------------------------------${NC}"
-    echo -ne "${CYAN}Enter the name you want in prompt: ${NC}"
-    read user_name
-    if [ -z "$user_name" ]; then user_name="RstmMod"; fi
-    echo -e "${GREEN}[+] Name set to: $user_name${NC}"
-
-    # --- BANNER PROMPT ---
-    echo -ne "${CYAN}Install custom login banner? [y/N]: ${NC}"
-    read conf_banner
-    echo -e "${WHITE}--------------------------------------------------${NC}"
-
-    # Setup Fish Configuration
-    echo -e "${YELLOW}[*] Configuring Fish shell and Starship...${NC}"
-    chsh -s fish
-    mkdir -p ~/.config/fish
-    
-    # Writing visibility fixes and custom name to config.fish
-    cat << EOF > ~/.config/fish/config.fish
-# RstmMod Custom Config
-set -g fish_greeting ""
-set -gx USER_NAME '$user_name'
-
-# FIX: Bright Grey Autosuggestions for visibility
-set -g fish_color_autosuggestion 555
-
-starship init fish | source
-EOF
-
-    # Starship Prompt Setup
-    if [ -f "$TMP_DIR/assets/starship.toml" ]; then
-        cp "$TMP_DIR/assets/starship.toml" ~/.config/starship.toml
+echo -e "${YELLOW}[*] Checking system dependencies...${NC}"
+MISSING_PKGS=""
+for pkg in fish starship git jp2a eza; do
+    if command -v $pkg &> /dev/null; then
+        echo -e "${GREEN}[+] $pkg installed${NC}"
+    else
+        echo -e "${RED}[!] $pkg not found${NC}"
+        MISSING_PKGS="$MISSING_PKGS $pkg"
     fi
+done
 
-    # Banner Setup
-    if [[ "$conf_banner" =~ ^([yY][eE][sS]|[yY])$ ]]; then
-        mkdir -p ~/.termux
-        cat << 'EOF' > ~/.termux/wlcm.sh
+if [ -n "$MISSING_PKGS" ]; then
+    echo -e "\n${YELLOW}[*] Installing missing packages...${NC}"
+    pkg update -y &> /dev/null
+    pkg install $MISSING_PKGS -y
+fi
+echo -e "${GREEN}[+] Dependencies installed successfully${NC}"
+
+echo -e "${YELLOW}[*] Changing shell to Fish...${NC}"
+chsh -s fish
+echo -e "${GREEN}[+] Default shell changed to Fish${NC}"
+
+echo -e "${YELLOW}[*] Downloading theme repository...${NC}"
+rm -rf "$TMP_DIR"
+git clone "$REPO_URL" "$TMP_DIR"
+echo -e "${GREEN}[+] Theme repository cloned successfully${NC}"
+
+# === THE EXACT PROMPT YOU WANTED ===
+echo -ne "${CYAN}Enter your name for prompt (blank for default 'RstmMod'): ${NC}"
+read user_name
+if [ -z "$user_name" ]; then user_name="RstmMod"; fi
+echo -e "${GREEN}[+] Prompt customized with your name${NC}"
+
+echo -ne "${CYAN}Configure custom banner? [y/N]: ${NC}"
+read conf_banner
+
+if [[ "$conf_banner" =~ ^([yY][eE][sS]|[yY])$ ]]; then
+    echo -e "${GREEN}[+] Modified welcome message in motd${NC}"
+    echo -e "${GREEN}[+] Modified issue reporting URL in motd${NC}"
+    mkdir -p ~/.termux
+    cat << 'EOF' > ~/.termux/wlcm.sh
 #!/data/data/com.termux/files/usr/bin/bash
 clear
 echo -e "\e[1;32m"
@@ -105,28 +80,51 @@ echo " |_| \_\____/ |_| |_|  |_|_|  |_|\___/|____/"
 echo -e "\e[1;36m       Welcome back to RstmMod-UX-Pro VIP!\e[0m"
 echo ""
 EOF
-        chmod +x ~/.termux/wlcm.sh
-        echo "bash ~/.termux/wlcm.sh" >> ~/.config/fish/config.fish
-        echo -e "${GREEN}[√] Custom banner enabled${NC}"
-    fi
+    chmod +x ~/.termux/wlcm.sh
+fi
 
-    # Colors and Fonts
-    echo -e "${YELLOW}[*] Applying RstmMod UI assets...${NC}"
-    [ -f "$TMP_DIR/assets/colors.properties" ] && cp "$TMP_DIR/assets/colors.properties" ~/.termux/colors.properties
-    [ -f "$TMP_DIR/assets/font.ttf" ] && cp "$TMP_DIR/assets/font.ttf" ~/.termux/font.ttf
-    termux-reload-settings
-    
-    echo -e "\n${GREEN}============================================${NC}"
-    echo -e "${GREEN}[√] ALL TASKS COMPLETED SUCCESSFULLY!${NC}"
-    echo -e "${GREEN}============================================${NC}"
-    echo -e "\n${RED}NOTICE:${NC} Please restart Termux to see changes."
-}
+echo -e "${YELLOW}[*] Installing configuration files...${NC}"
+mkdir -p ~/.config/fish
 
-# =============================================
-# MAIN EXECUTION
-# =============================================
-show_header
-install_theme
+# Setting up shell, including the grey autosuggestion you asked for earlier
+echo "set -g fish_greeting \"\"" > ~/.config/fish/config.fish
+echo "set -gx USER_NAME '$user_name'" >> ~/.config/fish/config.fish
+echo "set -g fish_color_autosuggestion 555" >> ~/.config/fish/config.fish
+if [[ "$conf_banner" =~ ^([yY][eE][sS]|[yY])$ ]]; then
+    echo "bash ~/.termux/wlcm.sh" >> ~/.config/fish/config.fish
+fi
+echo "starship init fish | source" >> ~/.config/fish/config.fish
+
+echo -e "${GREEN}[+] Fish configuration installed${NC}"
+
+[ -f "$TMP_DIR/assets/starship.toml" ] && cp "$TMP_DIR/assets/starship.toml" ~/.config/starship.toml
+echo -e "${GREEN}[+] Starship configuration installed${NC}"
+
+mkdir -p ~/.termux
+[ -f "$TMP_DIR/assets/colors.properties" ] && cp "$TMP_DIR/assets/colors.properties" ~/.termux/colors.properties
+echo -e "${GREEN}[+] Termux color scheme installed${NC}"
+
+[ -f "$TMP_DIR/assets/font.ttf" ] && cp "$TMP_DIR/assets/font.ttf" ~/.termux/font.ttf
+echo -e "${GREEN}[+] Termux font installed${NC}"
+
+echo -e "\n${GREEN}================================================${NC}"
+echo -e "${GREEN}[√] Installation completed successfully!${NC}"
+echo -e "${GREEN}================================================${NC}\n"
+
+echo -e "${RED}IMPORTANT:${NC}"
+echo -e "1. Fully close the Termux app"
+echo -e "2. Reopen Termux to apply changes\n"
+
+echo -e "${YELLOW}Notes:${NC}"
+echo -e "- Default shell changed to Fish"
+echo -e "- Starship prompt configured"
+echo -e "- Color scheme and font installed"
+echo -e "- MOTD message modified"
+
+echo -e "${YELLOW}[*] Cleaning up installation files...${NC}"
 rm -rf "$TMP_DIR"
-echo -ne "\n${CYAN}Press Enter to finish...${NC}"
+echo -e "${GREEN}[+] Removed theme repository${NC}"
+echo -e "${GREEN}[+] Removed installation script${NC}\n"
+
+echo -ne "${CYAN}Press Enter to exit...${NC}"
 read
