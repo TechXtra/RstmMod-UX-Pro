@@ -52,5 +52,5 @@ After installation **restart Termux** to see all changes.
 - Internet connection for installation
 
 ## 🌟 Credits
-Developed by [Alienkrishn](https://github.com/Anon4You)
+Developed by [Rustam Ali](https://github.com/TechXtra)
 
